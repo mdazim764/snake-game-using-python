@@ -15,11 +15,11 @@ screen_height = 500
 game_window = pygame.display.set_mode((screen_width, screen_height))
 #-------------------------------------------
 # Background Images
-bgimg2 = pygame.image.load("img_music\s1.jpg")
+bgimg2 = pygame.image.load(os.path.join("img_music", "s1.jpg"))
 bgimg2 = pygame.transform.scale(bgimg2, (screen_width, screen_height)).convert_alpha()
-bgimg = pygame.image.load("img_music\s2.jpg")
+bgimg = pygame.image.load(os.path.join("img_music", "s2.jpg"))
 bgimg = pygame.transform.scale(bgimg, (screen_width, screen_height)).convert_alpha()
-bgimg1 = pygame.image.load("img_music\s3.jpg")
+bgimg1 = pygame.image.load(os.path.join("img_music", "s3.jpg"))
 bgimg1 = pygame.transform.scale(bgimg1, (screen_width, screen_height)).convert_alpha()
 
 #----------------------------------------------
@@ -62,7 +62,7 @@ def welcome():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     # Load Background Musics...
-                    pygame.mixer.music.load("img_music\game_back.mp3")
+                    pygame.mixer.music.load(os.path.join("img_music", "game_back.mp3"))
                     pygame.mixer.music.play(-1)
                     gameloop()
 
@@ -108,8 +108,8 @@ def gameloop():
     init_velo = 5
 #food coding
     score = 0
-    food_x = random.randint(50,600)
-    food_y = random.randint(50, 450)
+    food_x = random.randint(50,600//2)
+    food_y = random.randint(50, 450//2)
 
     clock = pygame.time.Clock()
 #snake length 
@@ -136,7 +136,7 @@ def gameloop():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:#enter button
                         # Load Background Musics...
-                        pygame.mixer.music.load("img_music\game_back.mp3")
+                        pygame.mixer.music.load(os.path.join("img_music", "game_back.mp3"))
                         pygame.mixer.music.play(-1)
                         gameloop()
 
@@ -193,12 +193,12 @@ def gameloop():
         # score printing snake increse the length
             if abs(snak_x-food_x)<10 and abs(snak_y-food_y)<10 and abs(snak_x-food_x)>-10 and abs(snak_y-food_y)>-10 :
                 # Load Background Musics...
-                food = pygame.mixer.Sound('img_music\Drop.ogg')
+                food = pygame.mixer.Sound(os.path.join("img_music", "Drop.ogg"))
                 food.play()
 
                 score +=1   #score encriment for randomly showing food
-                food_x = random.randint(50, screen_width / 2)
-                food_y = random.randint(50, screen_height / 2)
+                food_x = random.randint(50, screen_width // 2)
+                food_y = random.randint(50, screen_height // 2)
                 food_color = random.choice(color)#color showing randomly
                 score_color = random.choice(color)
                 snk_length +=3
@@ -224,13 +224,13 @@ def gameloop():
             if head in snk_list[:-1]:
                 game_over = True
                
-                pygame.mixer.music.load("img_music\gameover.mp3")
+                pygame.mixer.music.load(os.path.join("img_music", "gameover.mp3"))
                 pygame.mixer.music.play()
 #if snake touches window line then game over
             if snak_x<0 or snak_x>=screen_width or snak_y<0 or snak_y>=screen_height :
                 game_over = True
                
-                pygame.mixer.music.load("img_music\gameover.mp3")
+                pygame.mixer.music.load(os.path.join("img_music", "gameover.mp3"))
                 pygame.mixer.music.play()
 
 
@@ -245,6 +245,6 @@ def gameloop():
     quit()
 
   
-pygame.mixer.music.load("img_music\welcome.mp3")
+pygame.mixer.music.load(os.path.join("img_music", "welcome.mp3"))
 pygame.mixer.music.play(-1)
 welcome()
