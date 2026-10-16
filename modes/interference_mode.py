@@ -1,6 +1,6 @@
 import pygame
-from snake_env import SnakeEnv, UP, RIGHT, DOWN, LEFT
-from q_agent import QLearningAgent
+from src.snake_env import SnakeEnv, UP, RIGHT, DOWN, LEFT
+from src.q_agent import QLearningAgent
 
 class InterferenceEnv(SnakeEnv):
     def __init__(self, width=700, height=500, grid_size=20):

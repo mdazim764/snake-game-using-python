@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
-from snake_env import SnakeEnv
-from q_agent import QLearningAgent
+from src.snake_env import SnakeEnv
+from src.q_agent import QLearningAgent
 
 def train_and_benchmark():
     episodes = 1000

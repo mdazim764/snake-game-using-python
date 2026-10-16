@@ -1,6 +1,6 @@
 import pygame
 import random
-from q_agent import QLearningAgent
+from src.q_agent import QLearningAgent
 
 # Directions
 UP = 0
