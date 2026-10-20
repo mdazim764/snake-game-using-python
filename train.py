@@ -74,7 +74,7 @@ def train_and_benchmark():
             state, _, done, score = demo_env.step(action, fps=25)
         print(f"🔥 Trained AI Demo Episode {demo_ep} | Final Score: {score}")
 
-    pygame.quit()
 
 if __name__ == "__main__":
     train_and_benchmark()
+    pygame.quit()
