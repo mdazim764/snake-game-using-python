@@ -139,13 +139,15 @@ def run_interference_experiment():
         print("[ERROR] 'q_table.pkl' nahi mila! Pehle 'python train.py' run karo.")
         return
 
-    fps = 12  # Slow enough for human to press arrow keys and mess with the AI
+    fps = 12  
     episode = 1
+    lives = 3  # 🔥 3 Lives add kar di
 
-    while True:
+    # 🔥 Ab loop tab tak chalega jab tak lives > 0 hain
+    while lives > 0:
         state = env.reset_experiment()
         done = False
-        print(f"\n--- Starting Interference Episode {episode} ---")
+        print(f"\n--- Starting Interference Episode {episode} | Lives Left: {lives} ---")
 
         while not done:
             human_target_dir = None
@@ -156,20 +158,13 @@ def run_interference_experiment():
                     pygame.quit()
                     return
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        human_target_dir = UP
-                    elif event.key == pygame.K_RIGHT:
-                        human_target_dir = RIGHT
-                    elif event.key == pygame.K_DOWN:
-                        human_target_dir = DOWN
-                    elif event.key == pygame.K_LEFT:
-                        human_target_dir = LEFT
-                    elif event.key == pygame.K_f:
-                        fps = min(60, fps + 3)
-                    elif event.key == pygame.K_s:
-                        fps = max(5, fps - 3)
-                    elif event.key == pygame.K_r:
-                        done = True
+                    if event.key == pygame.K_UP: human_target_dir = UP
+                    elif event.key == pygame.K_RIGHT: human_target_dir = RIGHT
+                    elif event.key == pygame.K_DOWN: human_target_dir = DOWN
+                    elif event.key == pygame.K_LEFT: human_target_dir = LEFT
+                    elif event.key == pygame.K_f: fps = min(60, fps + 3)
+                    elif event.key == pygame.K_s: fps = max(5, fps - 3)
+                    elif event.key == pygame.K_r: done = True
 
             # 2. Decide Action: AI Policy vs Human Override
             ai_action = agent.get_action(state, train_mode=False)
@@ -182,15 +177,38 @@ def run_interference_experiment():
                     final_action = rel_action
                     is_sabotaged = True
 
-            # 3. Step Environment & Online Q-Update (AI learns from your sabotage too!)
+            # 3. Step Environment
             next_state, reward, done, score = env.step_with_interference(
                 final_action, is_sabotaged=is_sabotaged, fps=fps
             )
             agent.learn(state, final_action, reward, next_state, done)
             state = next_state
+            
+            # 🔥 HUD ke top-right corner par LIVES dikhane ke liye
+            lives_surf = env.font.render(f"LIVES: {lives}", True, env.RED)
+            env.window.blit(lives_surf, (env.width - 120, 8))
+            pygame.display.flip()
 
         print(f"Episode {episode} Over | Score: {score} | Sabotages Survived: {env.sabotage_count}")
         episode += 1
+        lives -= 1  # 🔥 Game over hone par ek life minus kar di
+
+    # --- 🔥 GAME OVER SCREEN 🔥 ---
+    env.window.fill(env.BLACK)
+    go_font = pygame.font.SysFont("consolas", 40, bold=True)
+    txt1 = go_font.render("GAME OVER! NO LIVES LEFT.", True, env.RED)
+    txt2 = env.font.render("Press any key to Exit...", True, env.GRAY)
+    
+    env.window.blit(txt1, (env.width//2 - txt1.get_width()//2, env.height//2 - 30))
+    env.window.blit(txt2, (env.width//2 - txt2.get_width()//2, env.height//2 + 20))
+    pygame.display.flip()
+    
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                waiting = False
+    pygame.quit()
 
 if __name__ == "__main__":
     run_interference_experiment()

@@ -172,17 +172,22 @@ def run_comparison():
             elif arena.steps_taken > 1000: # Timeout prevention
                  match_active = False
 
-            # --- RENDER ---
+           # --- RENDER ---
             window.fill(BLACK)
             for x in range(0, arena.w, arena.grid_size):
                 pygame.draw.line(window, GRAY, (x, 0), (x, arena.h))
             for y in range(0, arena.h, arena.grid_size):
                 pygame.draw.line(window, GRAY, (0, y), (arena.w, y))
 
-            if arena.norm_alive:
-                for block in arena.norm_body: pygame.draw.rect(window, CYAN, (block[0], block[1], 19, 19))
-            if arena.opt_alive:
-                for block in arena.opt_body: pygame.draw.rect(window, GREEN, (block[0], block[1], 19, 19))
+            # 🔥 UPDATED: Draw Normal Agent (Zinda hai to Cyan, warna Gray/Dead)
+            for block in arena.norm_body: 
+                color = CYAN if arena.norm_alive else (100, 100, 100) # (100, 100, 100) is Gray
+                pygame.draw.rect(window, color, (block[0], block[1], 19, 19))
+            
+            # 🔥 UPDATED: Draw Optimized Agent (Zinda hai to Green, warna Gray/Dead)
+            for block in arena.opt_body: 
+                color = GREEN if arena.opt_alive else (100, 100, 100)
+                pygame.draw.rect(window, color, (block[0], block[1], 19, 19))
             
             pygame.draw.rect(window, RED, (arena.food[0], arena.food[1], 19, 19))
 
