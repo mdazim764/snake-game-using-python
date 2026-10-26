@@ -122,10 +122,8 @@ def run_comparison():
                 elif arena.norm_dir == DOWN: arena.norm_head[1] += arena.grid_size
                 elif arena.norm_dir == LEFT: arena.norm_head[0] -= arena.grid_size
 
-                # Check if it hits wall, itself, or the other agent
-                if arena.get_state(arena.norm_head, arena.norm_dir, arena.norm_body)[0] == 1 and action_norm == 0:
-                     arena.norm_alive = False
-                elif arena.norm_head[0] < 0 or arena.norm_head[0] >= arena.w or arena.norm_head[1] < 0 or arena.norm_head[1] >= arena.h or arena.norm_head in arena.norm_body or arena.norm_head in arena.opt_body:
+        # Check if it hits wall, itself, or the other agent
+                if arena.norm_head[0] < 0 or arena.norm_head[0] >= arena.w or arena.norm_head[1] < 0 or arena.norm_head[1] >= arena.h or arena.norm_head in arena.norm_body or arena.norm_head in arena.opt_body:
                      arena.norm_alive = False
                 else:
                     arena.norm_body.insert(0, list(arena.norm_head))
@@ -148,6 +146,7 @@ def run_comparison():
                 elif arena.opt_dir == DOWN: arena.opt_head[1] += arena.grid_size
                 elif arena.opt_dir == LEFT: arena.opt_head[0] -= arena.grid_size
 
+               # Optimized agent death check
                 if arena.opt_head[0] < 0 or arena.opt_head[0] >= arena.w or arena.opt_head[1] < 0 or arena.opt_head[1] >= arena.h or arena.opt_head in arena.opt_body or arena.opt_head in arena.norm_body:
                      arena.opt_alive = False
                 else:
@@ -235,7 +234,8 @@ def run_comparison():
                 if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
                     waiting = False
 
-    pygame.quit()
+    # pygame.quit()
+    return  # Return to Main Menu without quitting Pygame
 
 if __name__ == "__main__":
     run_comparison()

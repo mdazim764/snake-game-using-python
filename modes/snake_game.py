@@ -55,6 +55,7 @@ def welcome():
 
         text_screen("Welcome to Snakes Game",white, 100, 300)
         text_screen("Press Space Bar To Play Game", white, 70, 350)
+        text_screen("Press E Key to Exit" ,pygame.Color("red"), 70, 400)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit_game = True
@@ -65,6 +66,8 @@ def welcome():
                     pygame.mixer.music.load(os.path.join("img_music", "game_back.mp3"))
                     pygame.mixer.music.play(-1)
                     gameloop()
+                elif event.key == pygame.K_e:
+                    return  # Return to Main Menu without quitting Pygame
 
         pygame.display.update()
         clock.tick(60)
@@ -98,18 +101,21 @@ def gameloop():
 
     exit_game = False
     game_over = False
-    #snake specification
-    snak_x = 40
-    snak_y = 50
+
+    # snake specification
+    snak_x = 45 # Make it a multiple of 15
+    snak_y = 45 # Make it a multiple of 15
     snak_size = 15
-    fps = 40
+    fps = 15
     velo_x = 0
     velo_y = 0
-    init_velo = 5
-#food coding
+    init_velo = 15 # Ensure snake moves by EXACTLY 1 grid size per tick! (was 5)
+
+    # Food coding (Aligned to 15-pixel grid)
     score = 0
-    food_x = random.randint(50,600//2)
-    food_y = random.randint(50, 450//2)
+    # randint(range) * grid_size ensures it falls exactly on the grid
+    food_x = random.randint(3, (screen_width // snak_size) - 3) * snak_size
+    food_y = random.randint(3, (screen_height // snak_size) - 3) * snak_size
 
     clock = pygame.time.Clock()
 #snake length 
@@ -128,7 +134,7 @@ def gameloop():
             text_screen("score :" + str(score), green, 470, 136)
             text_screen("Game Over!",red,230,270)
             text_screen("Press Enter to Continue ",green,20,420)
-            text_screen("Press Key End for Exit", red, 20, 460)
+            text_screen("Press E Key End for Exit", red, 20, 460)
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     exit_game = True
@@ -139,6 +145,8 @@ def gameloop():
                         pygame.mixer.music.load(os.path.join("img_music", "game_back.mp3"))
                         pygame.mixer.music.play(-1)
                         gameloop()
+                    elif event.key == pygame.K_e:
+                        exit_game = True
 
 
                     if event.key == pygame.K_END:
@@ -196,9 +204,10 @@ def gameloop():
                 food = pygame.mixer.Sound(os.path.join("img_music", "Drop.ogg"))
                 food.play()
 
-                score +=1   #score encriment for randomly showing food
-                food_x = random.randint(50, screen_width // 2)
-                food_y = random.randint(50, screen_height // 2)
+                score += 1   
+                # New aligned food
+                food_x = random.randint(3, (screen_width // snak_size) - 3) * snak_size
+                food_y = random.randint(3, (screen_height // snak_size) - 3) * snak_size
                 food_color = random.choice(color)#color showing randomly
                 score_color = random.choice(color)
                 snk_length +=3
@@ -209,9 +218,24 @@ def gameloop():
 
             game_window.fill(white)
             game_window.blit(bgimg, (0,0))
-            text_screen("High Score :" + str(hiscore), hiscore_color,250, 5)
+            # 🔥 Draw Transparent Grid (20-30% Opacity)
+            # Pygame doesn't support alpha on direct line drawing easily, 
+            # so we create a transparent surface, draw lines on it, and blit it.
+            grid_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+            grid_color = (255, 255, 255, 50) # White color with ~20% alpha (50/255)
+            
+            for x in range(0, screen_width, snak_size):
+                pygame.draw.line(grid_surface, grid_color, (x, 0), (x, screen_height))
+            for y in range(0, screen_height, snak_size):
+                pygame.draw.line(grid_surface, grid_color, (0, y), (screen_width, y))
+                
+            game_window.blit(grid_surface, (0, 0)) # Put the grid over the background
+
+            # Texts and Food
+            text_screen("High Score :" + str(hiscore), hiscore_color, 250, 5)
             text_screen("Score :" + str(score ), score_color, 0, 5)
-            pygame.draw.circle(game_window, food_color, [food_x, food_y], 10)
+            # pygame.draw.circle(game_window, food_color, [food_x, food_y], 10)
+            pygame.draw.rect(game_window, food_color, [food_x, food_y, snak_size, snak_size])
 #snak head increase code
             head =[]
             head.append(snak_x)
@@ -241,8 +265,9 @@ def gameloop():
         clock.tick(fps)
 
 
-    pygame.quit()
-    quit()
+    # pygame.quit()
+    # quit()
+    return  # Return to Main Menu without quitting Pygame
 
   
 def run_game():

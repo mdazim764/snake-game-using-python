@@ -193,11 +193,11 @@ def run_interference_experiment():
         episode += 1
         lives -= 1  # 🔥 Game over hone par ek life minus kar di
 
-    # --- 🔥 GAME OVER SCREEN 🔥 ---
+ # --- 🔥 GAME OVER SCREEN 🔥 ---
     env.window.fill(env.BLACK)
     go_font = pygame.font.SysFont("consolas", 40, bold=True)
     txt1 = go_font.render("GAME OVER! NO LIVES LEFT.", True, env.RED)
-    txt2 = env.font.render("Press any key to Exit...", True, env.GRAY)
+    txt2 = env.font.render("Press ESC key to Exit...", True, env.GRAY)
     
     env.window.blit(txt1, (env.width//2 - txt1.get_width()//2, env.height//2 - 30))
     env.window.blit(txt2, (env.width//2 - txt2.get_width()//2, env.height//2 + 20))
@@ -206,9 +206,12 @@ def run_interference_experiment():
     waiting = True
     while waiting:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+            # 🔥QUIT par engine kill mat kar
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 waiting = False
-    pygame.quit()
+                
+    # 🔥 YAHAN SE BHI `pygame.quit()` HATA DIYA HAI
+    return
 
 if __name__ == "__main__":
     run_interference_experiment()

@@ -267,7 +267,7 @@ class BattleArena:
                         waiting = False
                         self.run_match()
                     elif event.key == pygame.K_ESCAPE:
-                        pygame.quit()
+                        # pygame.quit()
                         return
 
 if __name__ == "__main__":
