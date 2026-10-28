@@ -19,10 +19,9 @@ class InterferenceEnv(SnakeEnv):
         return self.reset()
 
     def step_with_interference(self, action, is_sabotaged=False, fps=12):
-        """AI ya Human Override action ko execute karta hai bina event queue clear kiye"""
         if is_sabotaged:
             self.sabotage_count += 1
-            self.sabotage_flash_timer = 5  # 5 frames tak snake Orange dikhega
+            self.sabotage_flash_timer = 5
 
         old_dist = abs(self.head[0] - self.food[0]) + abs(self.head[1] - self.food[1])
 
@@ -141,7 +140,7 @@ def run_interference_experiment():
 
     fps = 12  
     episode = 1
-    lives = 3  # 🔥 3 Lives add kar di
+    lives = 3
 
     # 🔥 Ab loop tab tak chalega jab tak lives > 0 hain
     while lives > 0:
@@ -191,7 +190,7 @@ def run_interference_experiment():
 
         print(f"Episode {episode} Over | Score: {score} | Sabotages Survived: {env.sabotage_count}")
         episode += 1
-        lives -= 1  # 🔥 Game over hone par ek life minus kar di
+        lives -= 1
 
  # --- 🔥 GAME OVER SCREEN 🔥 ---
     env.window.fill(env.BLACK)
@@ -209,8 +208,8 @@ def run_interference_experiment():
             # 🔥QUIT par engine kill mat kar
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 waiting = False
+
                 
-    # 🔥 YAHAN SE BHI `pygame.quit()` HATA DIYA HAI
     return
 
 if __name__ == "__main__":
